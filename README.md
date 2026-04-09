@@ -22,8 +22,6 @@ Example:
 npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ```
 
-<br />
-
 ## Current Skills
 
 - `fgcapi-to-openapi`: convert a Forguncy API Excel workbook into OpenAPI 3.0 JSON for Apifox import
