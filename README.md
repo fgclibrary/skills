@@ -7,13 +7,19 @@ Reusable agent skills for the Forguncy low-code platform.
 Install a specific skill with the `skills` CLI:
 
 ```bash
-npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
+npx skills add https://github.com/fgclibrary/skills --skill <skill-name>
 ```
 
 If the CLI supports shorthand repositories in your environment, this may also work:
 
 ```bash
-npx skills add fgclibrary/skills --skill fgcapi-to-openapi
+npx skills add fgclibrary/skills --skill <skill-name>
+```
+
+Example:
+
+```bash
+npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ```
 
 <br />
@@ -29,4 +35,3 @@ npx skills add fgclibrary/skills --skill fgcapi-to-openapi
 3. Add scripts or examples if needed
 4. Test the skill locally
 5. Commit the new skill as an isolated change
-

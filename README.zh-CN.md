@@ -7,13 +7,19 @@
 使用 `skills` CLI 安装指定 skill：
 
 ```bash
-npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
+npx skills add https://github.com/fgclibrary/skills --skill <skill-name>
 ```
 
 如果你的环境支持仓库简写，也可以尝试：
 
 ```bash
-npx skills add fgclibrary/skills --skill fgcapi-to-openapi
+npx skills add fgclibrary/skills --skill <skill-name>
+```
+
+示例：
+
+```bash
+npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ```
 
 <br />
@@ -29,4 +35,3 @@ npx skills add fgclibrary/skills --skill fgcapi-to-openapi
 3. 按需增加脚本、示例或备注文件
 4. 本地验证该 skill
 5. 以独立变更提交
-
