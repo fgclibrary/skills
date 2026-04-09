@@ -1,0 +1,11 @@
+.DS_Store
+*.pyc
+__pycache__/
+.idea/
+.vscode/
+.env
+.env.*
+dist/
+build/
+tmp/
+output/
