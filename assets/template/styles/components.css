@@ -1,0 +1,641 @@
+.indexed-item {
+  display: grid;
+  grid-template-columns: 3.2cqw minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 1cqw;
+  align-content: start;
+}
+
+.indexed-item-number {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  color: var(--primary);
+  font: 620 1cqw/1 var(--font-mono);
+}
+
+.indexed-item-title {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-size: 1.75cqw;
+  font-weight: 620;
+  line-height: 1.18;
+}
+
+.indexed-item-description {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0.65cqw 0 0;
+  color: var(--muted-foreground);
+  font-size: 1.2cqw;
+  line-height: 1.5;
+}
+
+.indexed-item.is-description-bottom .indexed-item-description {
+  align-self: end;
+  margin-top: auto;
+}
+
+.indexed-grid {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(var(--columns, 2), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+
+.indexed-grid .indexed-item {
+  min-height: 0;
+  padding: 2cqw;
+  background: var(--card);
+  align-content: center;
+}
+
+.metric-group {
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+  align-items: center;
+}
+
+.metric-item {
+  min-width: 0;
+  padding: 1cqw 2.4cqw;
+  border-left: 1px solid var(--border);
+}
+
+.metric-item:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.metric-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45cqw;
+  color: var(--primary);
+}
+
+.metric-value strong {
+  font-size: 4.6cqw;
+  font-weight: 650;
+  letter-spacing: -0.065em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-value span {
+  font-size: 1.35cqw;
+  font-weight: 600;
+}
+
+.metric-item h2 {
+  margin: 1.2cqw 0 0;
+  font-size: 1.55cqw;
+  line-height: 1.2;
+}
+
+.metric-item p {
+  margin: 0.65cqw 0 0;
+  color: var(--muted-foreground);
+  font-size: 1.05cqw;
+  line-height: 1.5;
+}
+
+.metric-meta {
+  display: block;
+  margin-top: 1.15cqw;
+  color: var(--muted-foreground);
+  font: 520 0.82cqw/1.3 var(--font-mono);
+}
+
+.data-table-wrap {
+  display: grid;
+  height: 100%;
+  align-content: center;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.22cqw;
+  line-height: 1.35;
+}
+
+.data-table th,
+.data-table td {
+  padding: 1.12cqw 1.2cqw;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.data-table th {
+  color: var(--muted-foreground);
+  font: 600 0.96cqw/1.25 var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.data-table .is-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tr.is-summary td {
+  border-top: 1px solid var(--foreground);
+  font-weight: 650;
+}
+
+.process {
+  position: relative;
+  display: grid;
+  height: 100%;
+  grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr));
+  align-items: center;
+}
+
+.process::before {
+  position: absolute;
+  top: 50%;
+  right: 2cqw;
+  left: 2cqw;
+  height: 1px;
+  background: var(--border);
+  content: "";
+}
+
+.process-step {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.process-marker {
+  z-index: 1;
+  display: grid;
+  width: 3.2cqw;
+  height: 3.2cqw;
+  place-items: center;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--primary);
+  font: 620 0.95cqw/1 var(--font-mono);
+}
+
+.process-step.is-current .process-marker,
+.process-step.is-complete .process-marker {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.process-step h2 {
+  position: absolute;
+  bottom: calc(50% + 3.3cqw);
+  width: 86%;
+  margin: 0;
+  font-size: 1.4cqw;
+}
+
+.process-step p {
+  position: absolute;
+  top: calc(50% + 3.1cqw);
+  width: 86%;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 1cqw;
+  line-height: 1.45;
+}
+
+.slide-component-chart .slide-body,
+.slide-component-diagram-nodes .slide-body {
+  display: flex;
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+.chart-figure {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.chart-surface {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.chart-loading,
+.chart-error {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  place-items: center;
+  color: var(--muted-foreground);
+  font-size: 1.1cqw;
+}
+
+.chart-error {
+  color: var(--negative);
+}
+
+.chart-figure figcaption {
+  margin-top: 0.6cqw;
+  color: var(--muted-foreground);
+  font: 500 0.8cqw/1.4 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+.diagram-surface {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  place-items: center;
+}
+
+.architecture-loading,
+.architecture-diagram[data-state="error"] {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.9cqw;
+}
+
+.architecture-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.architecture-svg-edge {
+  fill: none;
+  stroke: color-mix(in oklab, var(--muted-foreground) 72%, transparent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
+}
+
+.architecture-svg-edge.is-primary {
+  stroke: var(--primary);
+  stroke-width: 1.6;
+}
+
+.architecture-svg-edge.is-auxiliary {
+  stroke: color-mix(in oklab, var(--muted-foreground) 48%, transparent);
+  stroke-dasharray: 5 5;
+  stroke-width: 1;
+}
+
+.architecture-arrow.is-default path {
+  fill: color-mix(in oklab, var(--muted-foreground) 72%, transparent);
+}
+
+.architecture-arrow.is-primary path {
+  fill: var(--primary);
+}
+
+.architecture-arrow.is-auxiliary path {
+  fill: color-mix(in oklab, var(--muted-foreground) 48%, transparent);
+}
+
+.architecture-svg-node rect {
+  fill: var(--background);
+  stroke: var(--border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.architecture-svg-node.is-input rect {
+  fill: color-mix(in oklab, var(--muted) 40%, var(--background));
+}
+
+.architecture-svg-node.is-core rect {
+  fill: color-mix(in oklab, var(--primary) 10%, var(--background));
+  stroke: var(--primary);
+  stroke-width: 1.5;
+}
+
+.architecture-svg-node.is-output rect {
+  fill: var(--primary);
+  stroke: var(--primary);
+}
+
+.architecture-svg-title,
+.architecture-svg-description {
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+
+.architecture-svg-title {
+  fill: var(--foreground);
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.architecture-svg-description {
+  fill: var(--muted-foreground);
+  font-size: 11px;
+}
+
+.architecture-svg-node.is-output .architecture-svg-title,
+.architecture-svg-node.is-output .architecture-svg-description {
+  fill: var(--primary-foreground);
+}
+
+.slide-component-media-surface .slide-body {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+}
+
+.content-media-collection {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  gap: 3cqw;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-media {
+  display: flex;
+  max-width: 100%;
+  margin: 0;
+  flex-direction: column;
+}
+
+.content-media.is-landscape {
+  width: 52cqw;
+}
+
+.content-media.is-portrait {
+  width: 24cqw;
+}
+
+.content-media.is-vertical {
+  width: 17.5cqw;
+}
+
+.content-media-surface {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.content-media.is-landscape .content-media-surface {
+  aspect-ratio: 16 / 9;
+}
+
+.content-media.is-portrait .content-media-surface {
+  aspect-ratio: 3 / 4;
+}
+
+.content-media.is-vertical .content-media-surface {
+  aspect-ratio: 9 / 16;
+}
+
+.content-media-element,
+.content-media-print-poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.content-media-element.is-contain,
+.content-media-print-poster.is-contain {
+  object-fit: contain;
+}
+
+.content-media-element.is-cover,
+.content-media-print-poster.is-cover {
+  object-fit: cover;
+}
+
+.content-media-print-poster {
+  display: none;
+}
+
+.content-media figcaption {
+  display: flex;
+  gap: 1.4cqw;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 0.75cqw;
+  color: var(--muted-foreground);
+  font-size: 0.85cqw;
+  line-height: 1.4;
+}
+
+.content-media figcaption strong {
+  color: var(--foreground);
+  font-weight: 580;
+}
+
+.comparison {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+}
+
+.comparison.is-neutral {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.comparison-panel {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.comparison-panel.is-left {
+  padding: 0.8cqw 4.2cqw 0 0;
+  color: var(--muted-foreground);
+}
+
+.comparison-panel.is-right {
+  padding: 0.8cqw 0 0 5cqw;
+  border-left: 1px solid var(--border);
+}
+
+.comparison-heading span {
+  display: block;
+  color: var(--primary);
+  font: 600 0.9cqw/1 var(--font-mono);
+  letter-spacing: 0.2em;
+}
+
+.comparison-panel.is-left .comparison-heading span {
+  color: color-mix(in oklab, var(--muted-foreground) 76%, var(--background));
+}
+
+.comparison-heading h2 {
+  margin: 0.75cqw 0 0;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.comparison-panel.is-left .comparison-heading h2 {
+  color: color-mix(in oklab, var(--muted-foreground) 78%, var(--background));
+  font-size: 1.85cqw;
+  font-weight: 650;
+}
+
+.comparison-panel.is-right .comparison-heading h2 {
+  font-size: 2.35cqw;
+  font-weight: 680;
+}
+
+.comparison-legacy-list {
+  display: flex;
+  margin-top: 1.4cqw;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.35cqw;
+  justify-content: center;
+}
+
+.comparison-legacy-item {
+  display: grid;
+  grid-template-columns: 0.34cqw minmax(0, 1fr);
+  gap: 0.96cqw;
+  align-items: center;
+}
+
+.comparison-legacy-item::before {
+  width: 0.34cqw;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--muted-foreground) 44%, var(--background));
+  content: "";
+}
+
+.comparison-legacy-item p {
+  margin: 0;
+  color: color-mix(in oklab, var(--muted-foreground) 68%, var(--background));
+  font-size: 1.15cqw;
+  line-height: 1.45;
+}
+
+.comparison-target-list {
+  display: grid;
+  min-height: 0;
+  margin-top: 1.4cqw;
+  flex: 1;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.comparison-target-item {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 4.6cqw minmax(0, 1fr);
+  align-content: center;
+  align-items: start;
+  border-top: 1px solid var(--border);
+}
+
+.comparison-target-item:first-child {
+  border-top: 0;
+}
+
+.comparison-index {
+  display: flex;
+  height: calc(1.45cqw * 1.3);
+  align-items: center;
+  color: var(--primary);
+  font: 650 1.1cqw/1 var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.comparison-target-item h3 {
+  margin: 0;
+  font-size: 1.45cqw;
+  font-weight: 640;
+  line-height: 1.3;
+}
+
+.comparison-target-item p {
+  margin: 0.48cqw 0 0;
+  color: var(--muted-foreground);
+  font-size: 1.02cqw;
+  line-height: 1.48;
+}
+
+.comparison.is-neutral .comparison-panel.is-left,
+.comparison.is-neutral .comparison-panel.is-left .comparison-heading h2,
+.comparison.is-neutral .comparison-legacy-item p {
+  color: var(--foreground);
+}
+
+.slide-component-callout .slide-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.callout {
+  width: 88%;
+  padding: 0.9cqw 0 0.9cqw 3cqw;
+  border-inline-start: 0.48cqw solid var(--primary);
+}
+
+.callout.is-neutral {
+  border-inline-start-color: var(--foreground);
+}
+
+.callout-label {
+  display: block;
+  color: var(--primary);
+  font: 650 0.92cqw/1.2 var(--font-mono);
+  letter-spacing: 0.12em;
+}
+
+.callout.is-neutral .callout-label {
+  color: var(--muted-foreground);
+}
+
+.callout-message {
+  max-width: 92%;
+  margin: 1.15cqw 0 0;
+  font-size: 3.15cqw;
+  font-weight: 680;
+  letter-spacing: -0.04em;
+  line-height: 1.28;
+}
+
+.callout-copy p {
+  max-width: 78%;
+  margin: 1.2cqw 0 0;
+  color: var(--muted-foreground);
+  font-size: 1.35cqw;
+  line-height: 1.55;
+}
+
+.callout-copy cite {
+  display: block;
+  margin-top: 1.35cqw;
+  color: var(--muted-foreground);
+  font: 550 0.82cqw/1.3 var(--font-mono);
+  font-style: normal;
+  letter-spacing: 0.04em;
+}

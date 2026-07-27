@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>HTML Slides</title>
+    <link rel="stylesheet" href="./styles/tokens.css">
+    <link rel="stylesheet" href="./styles/shell.css">
+    <link rel="stylesheet" href="./styles/slides.css">
+    <link rel="stylesheet" href="./styles/components.css">
+    <link rel="stylesheet" href="./styles/print.css" media="print">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="slideMenu" aria-labelledby="menuTitle" aria-hidden="true" inert>
+        <div class="sidebar-head">
+          <p class="sidebar-kicker">HTML Slides</p>
+          <h1 id="menuTitle">页面导航</h1>
+          <p id="menuDescription">选择页面，或使用方向键翻页。</p>
+        </div>
+        <nav class="slide-nav" aria-label="幻灯片页面">
+          <ol id="slideList"></ol>
+        </nav>
+      </aside>
+
+      <button class="menu-scrim" id="menuScrim" type="button" aria-label="关闭页面导航"></button>
+
+      <main class="main-shell">
+        <header class="toolbar">
+          <div class="toolbar-group">
+            <button class="icon-button" id="menuButton" type="button" aria-label="打开页面导航" aria-expanded="false" title="页面导航">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+            <div class="toolbar-copy">
+              <span id="toolbarType">Cover</span>
+              <strong id="toolbarTitle">封面</strong>
+            </div>
+          </div>
+
+          <div class="toolbar-group">
+            <span class="page-counter" id="pageCounter">01 / 01</span>
+            <button class="icon-button" id="themeButton" type="button" aria-label="切换深浅主题" title="切换主题"></button>
+            <button class="icon-button" id="notesButton" type="button" aria-label="显示讲者备注" aria-pressed="false" title="讲者备注（N）">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
+            </button>
+            <button class="text-button" id="presentButton" type="button" title="全屏演示（F）">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+              <span>演示</span>
+            </button>
+            <button class="text-button" id="printButton" type="button" title="打印 / 导出 PDF（P）">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7zM17 12h.01"/></svg>
+              <span>导出 PDF</span>
+            </button>
+            <span class="toolbar-divider" aria-hidden="true"></span>
+            <button class="icon-button" id="prevButton" type="button" aria-label="上一页" title="上一页">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button class="icon-button" id="nextButton" type="button" aria-label="下一页" title="下一页">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="workspace">
+          <div class="stage-wrap">
+            <div class="stage" id="stage" aria-live="polite"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <aside class="notes-panel" id="notesPanel" aria-labelledby="notesTitle" aria-hidden="true">
+      <div class="notes-head">
+        <div>
+          <span>Speaker notes</span>
+          <h2 id="notesTitle">讲者备注</h2>
+        </div>
+        <button class="icon-button" id="closeNotesButton" type="button" aria-label="关闭讲者备注">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="notes-content" id="notesContent"></div>
+    </aside>
+
+    <div class="print-deck" id="printDeck" aria-hidden="true"></div>
+
+    <script src="./content/brand-config.js"></script>
+    <script src="./content/deck-data.js"></script>
+    <script src="./scripts/renderers.js"></script>
+    <script src="./assets/vendor/elkjs-0.12.0/elk.bundled.js"></script>
+    <script src="./scripts/diagram-runtime.js"></script>
+    <script src="./assets/vendor/echarts-6.1.0/echarts.min.js"></script>
+    <script src="./scripts/chart-runtime.js"></script>
+    <script src="./scripts/app.js"></script>
+  </body>
+</html>

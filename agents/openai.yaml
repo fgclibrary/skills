@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Slides"
+  short_description: "创建统一 UI、支持离线演示与 PDF 导出的 16:9 HTML 幻灯片"
+  default_prompt: "使用 $html-slides 将内容制作成可离线演示并可导出 PDF 的统一风格 HTML 幻灯片。"
