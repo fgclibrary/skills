@@ -27,6 +27,7 @@ npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ## 当前 Skills
 
 - `fgcapi-to-openapi`：将活字格 API Excel 工作簿转换为可导入 Apifox 的 OpenAPI 3.0 JSON
+- `html-slides`：创建统一样式、可离线演示、带讲者讲稿并支持 PDF 导出的 16:9 HTML 幻灯片
 
 ## 新增 Skill
 

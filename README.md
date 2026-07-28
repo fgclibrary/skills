@@ -25,6 +25,7 @@ npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ## Current Skills
 
 - `fgcapi-to-openapi`: convert a Forguncy API Excel workbook into OpenAPI 3.0 JSON for Apifox import
+- `html-slides`: create standardized offline 16:9 HTML presentations with speaker notes and PDF export
 
 ## Adding A New Skill
 
