@@ -1,0 +1,52 @@
+@page {
+  size: 13.333in 7.5in;
+  margin: 0;
+}
+
+html,
+body {
+  width: 13.333in;
+  margin: 0;
+  background: white;
+}
+
+body .app-shell,
+body.presenting .app-shell,
+body .notes-panel,
+body .menu-scrim {
+  display: none;
+}
+
+.print-deck {
+  display: block;
+}
+
+.print-slide {
+  position: relative;
+  width: 13.333in;
+  height: 7.5in;
+  overflow: hidden;
+  break-after: page;
+  background: var(--card);
+  color: var(--card-foreground);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  container-type: size;
+}
+
+.print-slide:last-child {
+  break-after: auto;
+}
+
+* {
+  animation: none !important;
+  transition: none !important;
+}
+
+.print-slide video.content-media-element {
+  display: none;
+}
+
+.print-slide .content-media-print-poster {
+  display: block;
+}
