@@ -1,5 +1,7 @@
 # Forguncy Skills
 
+[简体中文](./README.zh-CN.md)
+
 Reusable agent skills for the Forguncy low-code platform.
 
 ## Install
