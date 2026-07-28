@@ -1,0 +1,4 @@
+interface:
+  display_name: "FGC API to OpenAPI"
+  short_description: "将活字格 API Excel 工作簿转换为可导入 Apifox 的 OpenAPI 3.0 JSON"
+  default_prompt: "使用 $fgcapi-to-openapi 将活字格 API Excel 工作簿转换为可导入 Apifox 的 OpenAPI JSON。"

@@ -1,0 +1,42 @@
+---
+name: "{{skill-name}}"
+description: "{{Describe the repeatable capability and the explicit user requests, inputs, or contexts that should trigger this skill.}}"
+---
+
+# {{Skill Display Name}}
+
+## Goal
+
+{{State the repeatable task this skill solves and the outcome it produces.}}
+
+## Expected Output
+
+{{Define the output type, file format, destination, and non-negotiable constraints.}}
+
+## Workflow
+
+1. {{Inspect the input and establish the real source of truth.}}
+2. {{Follow the repeatable transformation, generation, or validation steps.}}
+3. {{Validate the result with deterministic checks when possible.}}
+4. {{Return the artifact or report its exact location and remaining limitations.}}
+
+## Rules
+
+- {{Add only non-obvious rules that materially change execution.}}
+- {{Keep trigger conditions in the frontmatter description, not in a separate body section.}}
+- {{Use imperative instructions and remove all template placeholders before distribution.}}
+
+## Progressive Disclosure
+
+- Keep essential workflow instructions in this file.
+- Add `references/` only for detailed knowledge that should be read conditionally.
+- Add `assets/` only for templates, media, fonts, or other files copied into outputs.
+- Add `scripts/` only for deterministic or repeatedly reused operations.
+- Link every bundled reference from this file and state when to read it.
+
+## Validation
+
+- Confirm the folder name matches the frontmatter `name`.
+- Confirm `agents/openai.yaml` uses the same Skill name and default prompt.
+- Run bundled scripts against a representative input when scripts exist.
+- Verify generated artifacts in the tool or runtime that will actually consume them.

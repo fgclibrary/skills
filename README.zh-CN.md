@@ -32,7 +32,9 @@ npx skills add https://github.com/fgclibrary/skills --skill fgcapi-to-openapi
 ## 新增 Skill
 
 1. 复制 `template/skill-template/` 到 `skills/<new-skill-name>/`
-2. 完成 `SKILL.md`
-3. 按需增加脚本、示例或备注文件
-4. 本地验证该 skill
-5. 以独立变更提交
+2. 将 `SKILL.md.template` 重命名为 `SKILL.md`，将
+   `agents/openai.yaml.template` 重命名为 `agents/openai.yaml`
+3. 替换全部占位内容，并确保目录名称与 frontmatter 的 `name` 一致
+4. 只有确有需要时才增加 `references/`、`assets/` 或 `scripts/`
+5. 在本地验证元数据、随附脚本和代表性输出
+6. 将新 Skill 作为独立变更提交

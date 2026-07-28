@@ -17,13 +17,6 @@ The workbook should contain or be arranged to contain these two sheets:
 
 This skill assumes the workbook follows that structure. The file name itself is not fixed, but the file must be an `.xlsx`.
 
-## When To Use
-
-Use this skill when the user:
-- provides a Forguncy API `.xlsx` workbook
-- asks to convert 活字格接口文档 into OpenAPI / Swagger / Apifox JSON
-- asks to extract server commands and parameters from Forguncy documentation sheets
-
 ## Expected Output
 
 Produce:
