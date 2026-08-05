@@ -319,7 +319,12 @@ body.menu-open .menu-scrim {
 }
 
 .print-deck {
-  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 13.333in;
+  pointer-events: none;
+  transform: translateX(-200vw);
 }
 
 body.presenting .toolbar,

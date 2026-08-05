@@ -82,7 +82,10 @@
       isDark ? "切换到浅色主题" : "切换到深色主题",
     );
     storageSet("html-slides-theme", isDark ? "dark" : "light");
-    requestAnimationFrame(() => chartRenderer?.renderAll(elements.stage));
+    requestAnimationFrame(() => {
+      chartRenderer?.renderAll(elements.stage);
+      chartRenderer?.renderAll(elements.printDeck);
+    });
   }
 
   function renderNavigation() {
@@ -110,6 +113,7 @@
       )
       .join("");
     diagramRenderer?.renderAll(elements.printDeck);
+    chartRenderer?.renderAll(elements.printDeck);
   }
 
   function render() {
@@ -205,14 +209,6 @@
 
   document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement) document.body.classList.remove("presenting");
-  });
-
-  window.addEventListener("beforeprint", () => {
-    chartRenderer?.renderAll(elements.printDeck);
-  });
-
-  window.addEventListener("afterprint", () => {
-    chartRenderer?.disposeAll(elements.printDeck);
   });
 
   document.addEventListener("keydown", (event) => {

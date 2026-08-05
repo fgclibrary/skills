@@ -18,7 +18,9 @@ body .menu-scrim {
 }
 
 .print-deck {
-  display: block;
+  position: static;
+  width: auto;
+  transform: none;
 }
 
 .print-slide {
