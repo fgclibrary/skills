@@ -87,6 +87,26 @@
     }
   }
 
+  const dayMilliseconds = 24 * 60 * 60 * 1000;
+
+  function parseIsoDate(value, path) {
+    requireString(value, path);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      fail(path, "must use YYYY-MM-DD.");
+    }
+    const [year, month, day] = value.split("-").map(Number);
+    const timestamp = Date.UTC(year, month - 1, day);
+    const parsed = new Date(timestamp);
+    if (
+      parsed.getUTCFullYear() !== year ||
+      parsed.getUTCMonth() !== month - 1 ||
+      parsed.getUTCDate() !== day
+    ) {
+      fail(path, `must be a valid calendar date; received ${value}.`);
+    }
+    return timestamp;
+  }
+
   function validateMediaItem(media, path = "media") {
     requireObject(media, path);
     const kind = media.kind || "image";
@@ -236,6 +256,72 @@
     }
   }
 
+  function validateGantt(component, path) {
+    optionalString(component.taskLabel, `${path}.taskLabel`);
+    optionalString(component.ownerLabel, `${path}.ownerLabel`);
+    requireString(component.period, `${path}.period`);
+    requireString(component.source, `${path}.source`);
+
+    const columns = requireArray(component.columns, `${path}.columns`, 3, 6);
+    requireUniqueStrings(columns, "id", `${path}.columns`);
+    let previousEnd;
+    columns.forEach((column, index) => {
+      const columnPath = `${path}.columns[${index}]`;
+      requireObject(column, columnPath);
+      requireString(column.label, `${columnPath}.label`);
+      const start = parseIsoDate(column.start, `${columnPath}.start`);
+      const end = parseIsoDate(column.end, `${columnPath}.end`);
+      if (start > end) fail(columnPath, "start must not be later than end.");
+      if (previousEnd !== undefined && start !== previousEnd + dayMilliseconds) {
+        fail(
+          `${columnPath}.start`,
+          "columns must be chronological, non-overlapping, and date-contiguous.",
+        );
+      }
+      previousEnd = end;
+    });
+
+    const rangeStart = parseIsoDate(columns[0].start, `${path}.columns[0].start`);
+    const rangeEnd = parseIsoDate(
+      columns.at(-1).end,
+      `${path}.columns[${columns.length - 1}].end`,
+    );
+    const items = requireArray(component.items, `${path}.items`, 3, 8);
+    items.forEach((item, index) => {
+      const itemPath = `${path}.items[${index}]`;
+      requireObject(item, itemPath);
+      requireString(item.title, `${itemPath}.title`);
+      requireString(item.owner, `${itemPath}.owner`);
+      requireObject(item.timing, `${itemPath}.timing`);
+      const kind = requireEnum(
+        item.timing.kind,
+        ["execution", "milestone", "dependency"],
+        `${itemPath}.timing.kind`,
+      );
+      if (kind === "milestone") {
+        const date = parseIsoDate(item.timing.date, `${itemPath}.timing.date`);
+        if (date < rangeStart || date > rangeEnd) {
+          fail(`${itemPath}.timing.date`, "must fall within the declared columns.");
+        }
+        if (item.timing.start !== undefined || item.timing.end !== undefined) {
+          fail(`${itemPath}.timing`, "milestones only accept date.");
+        }
+      } else {
+        const start = parseIsoDate(item.timing.start, `${itemPath}.timing.start`);
+        const end = parseIsoDate(item.timing.end, `${itemPath}.timing.end`);
+        if (start > end) {
+          fail(`${itemPath}.timing`, "start must not be later than end.");
+        }
+        if (start < rangeStart || end > rangeEnd) {
+          fail(`${itemPath}.timing`, "must fall within the declared columns.");
+        }
+        if (item.timing.date !== undefined) {
+          fail(`${itemPath}.timing`, `${kind} only accepts start and end.`);
+        }
+      }
+    });
+  }
+
   function validateDiagramNodes(component, path) {
     requireEnum(component.direction, ["RIGHT", "DOWN"], `${path}.direction`);
     const nodes = requireArray(component.nodes, `${path}.nodes`, 3, 7);
@@ -314,6 +400,7 @@
     table: validateTable,
     process: validateProcess,
     chart: validateChart,
+    gantt: validateGantt,
     "diagram-nodes": validateDiagramNodes,
     comparison: validateComparison,
     "media-surface": validateMediaSurface,
@@ -544,6 +631,191 @@
       </figure>`;
   }
 
+  function textWidthUnits(value) {
+    return Array.from(String(value)).reduce((total, character) => {
+      if (/\s/.test(character)) return total + 0.35;
+      if (!/[\u0000-\u00ff]/.test(character)) return total + 1;
+      if (/[WM@%&]/.test(character)) return total + 0.95;
+      if (/[mw]/.test(character)) return total + 0.82;
+      if ("ilI1|.,:;'\"!()[]{}".includes(character)) return total + 0.32;
+      if (/[A-Z]/.test(character)) return total + 0.72;
+      if (/\d/.test(character)) return total + 0.58;
+      return total + 0.56;
+    }, 0);
+  }
+
+  function wrapSvgText(value, maxUnits, maxLines = 2) {
+    const characters = Array.from(String(value).trim());
+    const lines = [];
+    let line = "";
+    let lineUnits = 0;
+    let truncated = false;
+
+    for (const character of characters) {
+      const characterUnits = textWidthUnits(character);
+      if (line && lineUnits + characterUnits > maxUnits) {
+        if (lines.length >= maxLines - 1) {
+          truncated = true;
+          break;
+        }
+        lines.push(line.trimEnd());
+        line = character.trimStart();
+        lineUnits = textWidthUnits(line);
+      } else {
+        line += character;
+        lineUnits += characterUnits;
+      }
+    }
+
+    if (line && lines.length < maxLines) lines.push(line.trim());
+    if (truncated && lines.length > 0) {
+      const lastIndex = lines.length - 1;
+      let finalLine = lines[lastIndex].replace(/[.…]+$/u, "").trimEnd();
+      while (finalLine && textWidthUnits(`${finalLine}…`) > maxUnits) {
+        finalLine = Array.from(finalLine).slice(0, -1).join("").trimEnd();
+      }
+      lines[lastIndex] = `${finalLine}…`;
+    }
+    return lines;
+  }
+
+  function renderSvgText(
+    value,
+    x,
+    centerY,
+    className,
+    maxUnits,
+    anchor = "start",
+  ) {
+    const lines = wrapSvgText(value, maxUnits);
+    const firstY = centerY - ((lines.length - 1) * 9);
+    return `
+      <text class="${safeClass(className)}" x="${x}" y="${firstY}" text-anchor="${anchor}">
+        ${lines
+          .map(
+            (line, index) =>
+              `<tspan x="${x}" dy="${index === 0 ? 0 : 18}">${escapeHtml(line)}</tspan>`,
+          )
+          .join("")}
+      </text>`;
+  }
+
+  function renderGantt(component, slide) {
+    const width = 1200;
+    const height = 500;
+    const taskWidth = 300;
+    const ownerWidth = 180;
+    const taskTextWidth = taskWidth - 20;
+    const ownerTextWidth = ownerWidth - 16;
+    const timelineX = taskWidth;
+    const timelineWidth = width - taskWidth - ownerWidth;
+    const ownerX = timelineX + timelineWidth;
+    const top = 10;
+    const headerHeight = 48;
+    const rowHeight = 49;
+    const tableBottom = top + headerHeight + component.items.length * rowHeight;
+    const columnWidth = timelineWidth / component.columns.length;
+    const columnRanges = component.columns.map((column) => ({
+      start: parseIsoDate(column.start, "gantt column start"),
+      end: parseIsoDate(column.end, "gantt column end"),
+    }));
+    const kinds = [...new Set(component.items.map((item) => item.timing.kind))];
+    const legendLabels = {
+      execution: "执行周期",
+      milestone: "交付节点",
+      dependency: "外部依赖",
+    };
+
+    function datePosition(value, mode = "center") {
+      const timestamp = parseIsoDate(value, "gantt date");
+      const columnIndex = columnRanges.findIndex(
+        (column) => timestamp >= column.start && timestamp <= column.end,
+      );
+      const { start, end } = columnRanges[columnIndex];
+      const days = Math.round((end - start) / dayMilliseconds) + 1;
+      const dayIndex = Math.round((timestamp - start) / dayMilliseconds);
+      const offset =
+        mode === "start"
+          ? dayIndex / days
+          : mode === "end"
+            ? (dayIndex + 1) / days
+            : (dayIndex + 0.5) / days;
+      return timelineX + (columnIndex + offset) * columnWidth;
+    }
+
+    const columnHeaders = component.columns
+      .map((column, index) => {
+        const x = timelineX + index * columnWidth;
+        return `
+          <line class="gantt-grid-line" x1="${x}" y1="${top}" x2="${x}" y2="${tableBottom}"></line>
+          <text class="gantt-header-label" x="${x + columnWidth / 2}" y="${top + 29}" text-anchor="middle">${escapeHtml(column.label)}</text>`;
+      })
+      .join("");
+
+    const rows = component.items
+      .map((item, index) => {
+        const y = top + headerHeight + index * rowHeight;
+        const centerY = y + rowHeight / 2;
+        let timing;
+        if (item.timing.kind === "milestone") {
+          const x = datePosition(item.timing.date);
+          timing = `
+            <circle class="gantt-milestone-ring" cx="${x}" cy="${centerY}" r="8"></circle>
+            <circle class="gantt-milestone-dot" cx="${x}" cy="${centerY}" r="3.6"></circle>`;
+        } else {
+          const x = datePosition(item.timing.start, "start");
+          const endX = datePosition(item.timing.end, "end");
+          timing = `<rect class="gantt-range is-${safeClass(item.timing.kind)}" x="${x}" y="${centerY - 6}" width="${Math.max(endX - x, 3)}" height="12" rx="6"></rect>`;
+        }
+        return `
+          <g class="gantt-row">
+            <line class="gantt-row-line" x1="0" y1="${y}" x2="${width}" y2="${y}"></line>
+            <svg class="gantt-text-cell" x="0" y="${y}" width="${taskTextWidth}" height="${rowHeight}" overflow="hidden">
+              ${renderSvgText(item.title, 0, rowHeight / 2, "gantt-task-title", 16)}
+            </svg>
+            ${timing}
+            <svg class="gantt-text-cell" x="${ownerX + 16}" y="${y}" width="${ownerTextWidth}" height="${rowHeight}" overflow="hidden">
+              ${renderSvgText(item.owner, 0, rowHeight / 2, "gantt-owner", 10)}
+            </svg>
+          </g>`;
+      })
+      .join("");
+
+    const legendStart = width - kinds.length * 142;
+    const legend = kinds
+      .map((kind, index) => {
+        const x = legendStart + index * 142;
+        const y = 476;
+        const symbol =
+          kind === "milestone"
+            ? `
+              <circle class="gantt-milestone-ring" cx="${x + 8}" cy="${y}" r="6"></circle>
+              <circle class="gantt-milestone-dot" cx="${x + 8}" cy="${y}" r="2.8"></circle>`
+            : `<rect class="gantt-range is-${safeClass(kind)}" x="${x}" y="${y - 5}" width="30" height="10" rx="5"></rect>`;
+        return `${symbol}<text class="gantt-legend-label" x="${x + 40}" y="${y}">${legendLabels[kind]}</text>`;
+      })
+      .join("");
+
+    const titleId = `gantt-title-${safeClass(slide.id)}`;
+    const descriptionId = `gantt-description-${safeClass(slide.id)}`;
+    return `
+      <figure class="gantt-figure">
+        <svg class="gantt-svg" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="${titleId} ${descriptionId}">
+          <title id="${titleId}">${escapeHtml(slide.title)}</title>
+          <desc id="${descriptionId}">${escapeHtml(component.period)}，展示 ${component.items.length} 项重点任务的计划周期、交付节点和负责人。</desc>
+          <text class="gantt-header-label is-left" x="0" y="${top + 29}">${escapeHtml(component.taskLabel || "重点任务")}</text>
+          ${columnHeaders}
+          <line class="gantt-grid-line" x1="${ownerX}" y1="${top}" x2="${ownerX}" y2="${tableBottom}"></line>
+          <text class="gantt-header-label is-left" x="${ownerX + 16}" y="${top + 29}">${escapeHtml(component.ownerLabel || "负责人")}</text>
+          <line class="gantt-row-line" x1="0" y1="${top + headerHeight}" x2="${width}" y2="${top + headerHeight}"></line>
+          ${rows}
+          <line class="gantt-row-line" x1="0" y1="${tableBottom}" x2="${width}" y2="${tableBottom}"></line>
+          <g class="gantt-legend" aria-label="图例">${legend}</g>
+          <text class="gantt-meta" x="0" y="480">${escapeHtml(component.period)} · 来源：${escapeHtml(component.source)}</text>
+        </svg>
+      </figure>`;
+  }
+
   function renderDiagramNodes(component, slide) {
     return `
       <div class="diagram-surface architecture-diagram" data-architecture-id="${escapeHtml(slide.id)}" aria-label="${escapeHtml(slide.title)}">
@@ -665,6 +937,7 @@
     table: renderTable,
     process: renderProcess,
     chart: renderChart,
+    gantt: renderGantt,
     "diagram-nodes": renderDiagramNodes,
     comparison: renderComparison,
     "media-surface": renderMediaSurface,

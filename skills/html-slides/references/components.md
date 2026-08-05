@@ -13,6 +13,7 @@ Content Component 负责表达主体区域中的信息关系，不决定整页�
 | 展示 1–4 个同口径数字 | `metrics` | [metrics.md](components/metrics.md) |
 | 精确查值和横向比较 | `table` | [table.md](components/table.md) |
 | 表达变化、差距或构成 | `chart` | [chart.md](components/chart.md) |
+| 在报告中呈现任务排期、节点和负责人 | `gantt` | [gantt.md](components/gantt.md) |
 | 表达真实顺序或阶段 | `process` | [process.md](components/process.md) |
 | 表达层级、依赖、流转或生成关系 | `diagram-nodes` | [diagram-nodes.md](components/diagram-nodes.md) |
 | 在共同维度下突出双方差异 | `comparison` | [comparison.md](components/comparison.md) |

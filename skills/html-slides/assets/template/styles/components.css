@@ -214,6 +214,7 @@
 }
 
 .slide-component-chart .slide-body,
+.slide-component-gantt .slide-body,
 .slide-component-diagram-nodes .slide-body {
   display: flex;
   min-height: 0;
@@ -257,6 +258,96 @@
   font: 500 0.8cqw/1.4 var(--font-mono);
   letter-spacing: 0.04em;
   text-align: right;
+}
+
+.gantt-figure {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.gantt-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.gantt-header-label {
+  fill: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  dominant-baseline: middle;
+}
+
+.gantt-header-label.is-left {
+  letter-spacing: 0.02em;
+}
+
+.gantt-grid-line,
+.gantt-row-line {
+  stroke: var(--border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.gantt-grid-line {
+  stroke: color-mix(in oklab, var(--border) 72%, transparent);
+}
+
+.gantt-task-title {
+  fill: var(--card-foreground);
+  font-size: 17px;
+  font-weight: 620;
+  dominant-baseline: middle;
+}
+
+.gantt-text-cell {
+  overflow: hidden;
+}
+
+.gantt-owner {
+  fill: var(--muted-foreground);
+  font-size: 15px;
+  font-weight: 470;
+  dominant-baseline: middle;
+}
+
+.gantt-range {
+  fill: var(--primary);
+  stroke: var(--primary);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.gantt-range.is-dependency {
+  fill: color-mix(in oklab, var(--primary) 8%, transparent);
+  stroke-dasharray: 5 4;
+}
+
+.gantt-milestone-ring {
+  fill: var(--card);
+  stroke: var(--primary);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.gantt-milestone-dot {
+  fill: var(--primary);
+}
+
+.gantt-legend-label,
+.gantt-meta {
+  fill: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 520;
+  dominant-baseline: middle;
 }
 
 .diagram-surface {

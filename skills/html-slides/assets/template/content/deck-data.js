@@ -189,6 +189,123 @@ window.HTML_SLIDES_DECK = [
     ],
   },
   {
+    id: "gantt",
+    type: "content",
+    typeLabel: "Content",
+    navTitle: "甘特图",
+    title: "本月重点工作围绕模板落地与交付验证推进",
+    statement: "报告型甘特图只呈现任务、时间安排、交付节点和负责人。",
+    component: {
+      kind: "gantt",
+      taskLabel: "重点任务",
+      ownerLabel: "负责人",
+      columns: [
+        {
+          id: "week-1",
+          label: "8/3–8/9",
+          start: "2026-08-03",
+          end: "2026-08-09",
+        },
+        {
+          id: "week-2",
+          label: "8/10–8/16",
+          start: "2026-08-10",
+          end: "2026-08-16",
+        },
+        {
+          id: "week-3",
+          label: "8/17–8/23",
+          start: "2026-08-17",
+          end: "2026-08-23",
+        },
+        {
+          id: "week-4",
+          label: "8/24–8/31",
+          start: "2026-08-24",
+          end: "2026-08-31",
+        },
+      ],
+      items: [
+        {
+          title: "演示规范持续落地",
+          owner: "内容负责人、全员",
+          timing: {
+            kind: "execution",
+            start: "2026-08-03",
+            end: "2026-08-31",
+          },
+        },
+        {
+          title: "跨团队需求确认",
+          owner: "项目负责人",
+          timing: {
+            kind: "dependency",
+            start: "2026-08-03",
+            end: "2026-08-23",
+          },
+        },
+        {
+          title: "甘特图组件实现与样式校准",
+          owner: "开发负责人",
+          timing: {
+            kind: "execution",
+            start: "2026-08-06",
+            end: "2026-08-20",
+          },
+        },
+        {
+          title: "使用说明与月报、季度报告示例内容、讲者备注和打印说明补充",
+          owner: "内容负责人",
+          timing: {
+            kind: "execution",
+            start: "2026-08-10",
+            end: "2026-08-25",
+          },
+        },
+        {
+          title: "月中视觉评审",
+          owner: "设计与内容组",
+          timing: {
+            kind: "milestone",
+            date: "2026-08-14",
+          },
+        },
+        {
+          title: "深浅主题与全屏验证",
+          owner: "测试负责人",
+          timing: {
+            kind: "execution",
+            start: "2026-08-17",
+            end: "2026-08-26",
+          },
+        },
+        {
+          title: "PDF 打印验收",
+          owner: "项目组",
+          timing: {
+            kind: "execution",
+            start: "2026-08-24",
+            end: "2026-08-29",
+          },
+        },
+        {
+          title: "月末模板发布",
+          owner: "项目负责人",
+          timing: {
+            kind: "milestone",
+            date: "2026-08-31",
+          },
+        },
+      ],
+      period: "2026 年 8 月",
+      source: "模板示例计划",
+    },
+    notes: [
+      "甘特图用于月报、季度报告等静态汇报，只展示重点任务、周期、节点和负责人。",
+      "实线表示执行周期，圆点表示交付节点，虚线表示依赖外部条件；所有内容由 inline SVG 渲染。",
+    ],
+  },
+  {
     id: "process",
     type: "content",
     typeLabel: "Content",
