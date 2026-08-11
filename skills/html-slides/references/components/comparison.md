@@ -30,8 +30,7 @@
 
 - `direction` 仅允许 `forward` 或 `neutral`。
 - `left`、`right` 都必须提供简短 `label` 和 `title`。
-- `items` 为必需字段，每项同时包含 `dimension`、`leftValue`、`rightValue`
-  和 `rightDescription`。
+- `items` 为必需字段，每项同时包含 `dimension`、`leftValue`、`rightValue` 和 `rightDescription`。
 - 每个 `dimension` 在当前页面内唯一，并使用短名词。
 
 ## 默认视觉行为

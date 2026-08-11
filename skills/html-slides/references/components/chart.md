@@ -30,10 +30,8 @@
 
 - `variant` 仅允许 `line`、`bar` 或 `donut`。
 - `categories` 与每条 `series.values` 数量完全一致，值必须是数字。
-- `highlightIndex` 指定唯一关键类别；`highlightSentiment` 仅允许
-  `positive`、`negative` 或 `neutral`。
-- `line` 与 `bar` 必须提供合理的 `axis.min` 和 `axis.max`；`donut`
-  不使用坐标轴和目标线。
+- `highlightIndex` 指定唯一关键类别；`highlightSentiment` 仅允许 `positive`、`negative` 或 `neutral`。
+- `line` 与 `bar` 必须提供合理的 `axis.min` 和 `axis.max`；`donut` 不使用坐标轴和目标线。
 - `period`、`source` 和统一 `unit` 必须静态可见。
 - 数据层不接受任意 ECharts `option`。
 
@@ -41,8 +39,7 @@
 
 - 使用本地 ECharts 和 SVG renderer，保持离线、主题和打印稳定。
 - 坐标轴与网格线使用弱边界色，主体序列使用主题色。
-- 坐标轴、类别、目标线和数据标签沿用当前幻灯片的 Label / Body 字体层级，
-  根据画布宽度换算，不使用独立的固定大字号。
+- 坐标轴、类别、目标线和数据标签沿用当前幻灯片的 Label / Body 字体层级，根据画布宽度换算，不使用独立的固定大字号。
 - 只突出一个关键点或类别，不依赖 hover 或 tooltip 才能理解。
 - `bar` 直接显示精确值；`line` 只标注关键点；`donut` 直接显示类别和比例。
 

@@ -60,5 +60,4 @@
 - 深浅主题下边界和字幕清晰。
 - PDF 中显示 poster，且尺寸与演示模式中的视频表面一致。
 
-实现来源：`renderMediaItem()`、`renderMediaSurface()`、`.content-media-*` 与
-`styles/print.css`。
+实现来源：`renderMediaItem()`、`renderMediaSurface()`、`.content-media-*` 与 `styles/print.css`。

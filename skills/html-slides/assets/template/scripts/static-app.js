@@ -1,14 +1,11 @@
 (() => {
-  const deck = window.HTML_SLIDES_DECK;
-  const config = window.HTML_SLIDES_CONFIG || {};
-  const renderers = window.HtmlSlidesRenderers;
-  const diagramRenderer = window.HtmlSlidesDiagrams;
-  const chartRenderer = window.HtmlSlidesCharts;
+  const deck = window.HTML_SLIDES_STATIC_DECK || [];
+  const config = window.HTML_SLIDES_STATIC_CONFIG || {};
+  const staticAssets = window.HTML_SLIDES_STATIC_ASSETS || {};
 
-  if (!Array.isArray(deck) || deck.length === 0 || !renderers) {
-    throw new Error("HTML Slides failed to load its deck or renderers.");
+  if (!Array.isArray(deck) || deck.length === 0) {
+    throw new Error("Static HTML Slides failed to load its deck.");
   }
-  renderers.validateDeck(deck);
 
   const elements = {
     stage: document.getElementById("stage"),
@@ -28,33 +25,18 @@
     notesContent: document.getElementById("notesContent"),
     closeNotesButton: document.getElementById("closeNotesButton"),
     presentButton: document.getElementById("presentButton"),
-    printButton: document.getElementById("printButton"),
-    singleFileButton: document.getElementById("singleFileButton"),
-    printDeck: document.getElementById("printDeck"),
   };
-
-  const iconMoon =
-    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"/></svg>';
-  const iconSun =
-    '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
 
   let currentIndex = 0;
   let notesOpen = false;
 
-  function storageGet(key) {
-    try {
-      return window.localStorage.getItem(key);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  function storageSet(key, value) {
-    try {
-      window.localStorage.setItem(key, value);
-    } catch (_) {
-      // Local files can run with storage disabled.
-    }
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function setMenuOpen(isOpen) {
@@ -75,17 +57,21 @@
     elements.notesButton.setAttribute("aria-pressed", String(notesOpen));
   }
 
-  function setTheme(isDark) {
-    document.documentElement.classList.toggle("dark", isDark);
-    elements.themeButton.innerHTML = isDark ? iconSun : iconMoon;
-    elements.themeButton.setAttribute(
-      "title",
-      isDark ? "切换到浅色主题" : "切换到深色主题",
-    );
-    storageSet("html-slides-theme", isDark ? "dark" : "light");
-    requestAnimationFrame(() => {
-      chartRenderer?.renderAll(elements.stage);
-      chartRenderer?.renderAll(elements.printDeck);
+  function slideTitle(slide) {
+    return slide.navTitle || slide.title || slide.statement || "当前页";
+  }
+
+  function hydrateStaticAssets(root) {
+    ["src", "poster"].forEach((attribute) => {
+      root.querySelectorAll(`[data-static-${attribute}]`).forEach((element) => {
+        const key = element.dataset[`static${attribute[0].toUpperCase()}${attribute.slice(1)}`];
+        const value = staticAssets[key];
+        if (!value) {
+          throw new Error(`Static HTML Slides is missing asset ${key}.`);
+        }
+        element.setAttribute(attribute, value);
+        element.removeAttribute(`data-static-${attribute}`);
+      });
     });
   }
 
@@ -97,8 +83,8 @@
             <button class="nav-button" type="button" data-index="${index}" aria-current="false">
               <span class="nav-index">${String(index + 1).padStart(2, "0")}</span>
               <span class="nav-copy">
-                <strong>${renderers.escapeHtml(slide.navTitle || slide.title || slide.statement)}</strong>
-                <span>${renderers.escapeHtml(slide.typeLabel || slide.type)}</span>
+                <strong>${escapeHtml(slideTitle(slide))}</strong>
+                <span>${escapeHtml(slide.typeLabel || slide.type || "")}</span>
               </span>
             </button>
           </li>`,
@@ -106,30 +92,16 @@
       .join("");
   }
 
-  function renderPrintDeck() {
-    elements.printDeck.innerHTML = deck
-      .map(
-        (slide, index) =>
-          `<section class="print-slide">${renderers.render(slide, index, deck.length)}</section>`,
-      )
-      .join("");
-    diagramRenderer?.renderAll(elements.printDeck);
-    chartRenderer?.renderAll(elements.printDeck);
-  }
-
   function render() {
     const slide = deck[currentIndex];
-    chartRenderer?.disposeAll(elements.stage);
-    elements.stage.innerHTML = renderers.render(slide, currentIndex, deck.length);
-    diagramRenderer?.renderAll(elements.stage);
-    chartRenderer?.renderAll(elements.stage);
+    elements.stage.innerHTML = slide.html;
+    hydrateStaticAssets(elements.stage);
     const article = elements.stage.firstElementChild;
-    article.classList.add("is-entering");
-    requestAnimationFrame(() => article.classList.remove("is-entering"));
+    article?.classList.add("is-entering");
+    requestAnimationFrame(() => article?.classList.remove("is-entering"));
 
-    elements.toolbarType.textContent = slide.typeLabel || slide.type;
-    elements.toolbarTitle.textContent =
-      slide.navTitle || slide.title || slide.statement;
+    elements.toolbarType.textContent = slide.typeLabel || slide.type || "";
+    elements.toolbarTitle.textContent = slideTitle(slide);
     elements.pageCounter.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(deck.length).padStart(2, "0")}`;
     elements.prevButton.disabled = currentIndex === 0;
     elements.nextButton.disabled = currentIndex === deck.length - 1;
@@ -141,12 +113,11 @@
       );
     });
 
-    elements.notesTitle.textContent = `讲者备注 · ${slide.navTitle || slide.title || "当前页"}`;
+    elements.notesTitle.textContent = `讲者备注 · ${slideTitle(slide)}`;
     elements.notesContent.innerHTML = (slide.notes || ["本页暂无讲者备注。"])
-      .map((note) => `<p>${renderers.escapeHtml(note)}</p>`)
+      .map((note) => `<p>${escapeHtml(note)}</p>`)
       .join("");
-
-    document.title = `${slide.navTitle || slide.title || config.deckTitle || "HTML Slides"} · ${config.deckTitle || "HTML Slides"}`;
+    document.title = `${slideTitle(slide)} · ${config.deckTitle || "HTML Slides"}`;
   }
 
   function goTo(index) {
@@ -171,33 +142,12 @@
     }
   }
 
-  async function printDeck() {
-    document.body.classList.remove("menu-open", "presenting");
-    setMenuOpen(false);
-    setNotesOpen(false);
-    if (document.fullscreenElement) {
-      try {
-        await document.exitFullscreen();
-      } catch (_) {
-        // Printing can continue when fullscreen exit is declined.
-      }
-    }
-    window.print();
-  }
-
-  function downloadSingleFile() {
-    if (window.HtmlSlidesExport?.open) {
-      window.HtmlSlidesExport.open();
-      return;
-    }
-    window.alert(
-      "导出功能未加载，请通过本地 HTTP 预览重新打开演示。\n\n在演示目录运行：\npython3 -m http.server 8000 --bind 127.0.0.1\n\n然后访问：\nhttp://127.0.0.1:8000/\n\n重新点击“导出 HTML / ZIP”。",
-    );
-  }
+  // Static SVG exports use one selected theme. Remove controls that cannot
+  // change already-materialized SVG colors.
+  elements.themeButton?.remove();
+  document.documentElement.classList.toggle("dark", config.theme === "dark");
 
   renderNavigation();
-  renderPrintDeck();
-
   elements.slideList.addEventListener("click", (event) => {
     const button = event.target.closest(".nav-button");
     if (!button) return;
@@ -210,27 +160,16 @@
   elements.menuScrim.addEventListener("click", () => setMenuOpen(false));
   elements.prevButton.addEventListener("click", () => goTo(currentIndex - 1));
   elements.nextButton.addEventListener("click", () => goTo(currentIndex + 1));
-  elements.themeButton.addEventListener("click", () =>
-    setTheme(!document.documentElement.classList.contains("dark")),
-  );
   elements.notesButton.addEventListener("click", () => setNotesOpen(!notesOpen));
   elements.closeNotesButton.addEventListener("click", () => setNotesOpen(false));
   elements.presentButton.addEventListener("click", togglePresent);
-  elements.printButton.addEventListener("click", printDeck);
-  elements.singleFileButton.addEventListener("click", downloadSingleFile);
-
   document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement) document.body.classList.remove("presenting");
   });
-
   document.addEventListener("keydown", (event) => {
     const activeTag = document.activeElement?.tagName;
     if (["INPUT", "TEXTAREA", "SELECT", "VIDEO"].includes(activeTag)) return;
-
-    if (
-      ["ArrowRight", "ArrowDown", "PageDown"].includes(event.key) ||
-      event.key === " "
-    ) {
+    if (["ArrowRight", "ArrowDown", "PageDown"].includes(event.key) || event.key === " ") {
       event.preventDefault();
       goTo(currentIndex + 1);
     } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key)) {
@@ -248,24 +187,11 @@
     } else if (event.key.toLowerCase() === "f") {
       event.preventDefault();
       togglePresent();
-    } else if (
-      event.key.toLowerCase() === "p" &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.altKey
-    ) {
-      event.preventDefault();
-      printDeck();
     } else if (event.key === "Escape") {
       setNotesOpen(false);
       setMenuOpen(false);
     }
   });
-
-  const savedTheme = storageGet("html-slides-theme");
-  const systemDark =
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
   setMenuOpen(false);
-  setTheme(savedTheme ? savedTheme === "dark" : systemDark);
   render();
 })();

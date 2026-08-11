@@ -2,11 +2,9 @@
 
 在选择、修改或扩展页面的默认视觉构图时读取。
 
-`page-types.md` 定义页面为什么存在；本文件定义该 Page Type 默认怎样呈现；
-`assets/template/` 中的 renderer、token 和 CSS 决定精确结果。
+`page-types.md` 定义页面为什么存在；本文件定义该 Page Type 默认怎样呈现；`assets/template/` 中的 renderer、token 和 CSS 决定精确结果。
 
-不要在本文重复 CSS 数值。需要调整字号、间距或比例时直接修改模板实现，并确认
-这里描述的结构和行为仍然成立。
+不要在本文重复 CSS 数值。需要调整字号、间距或比例时直接修改模板实现，并确认这里描述的结构和行为仍然成立。
 
 ## 共享页面框架
 
@@ -17,8 +15,7 @@
 3. 主体区域占据剩余空间；
 4. Footer 固定在安全区底部，只显示品牌身份和页码。
 
-`cover`、`section` 和 `summary` 使用各自的稳定构图，不通过内容页
-坐标补丁模拟。
+`cover`、`section` 和 `summary` 使用各自的稳定构图，不通过内容页坐标补丁模拟。
 
 ## Cover
 
@@ -54,17 +51,14 @@
 
 - 使用共享页面框架，主体默认由主要证据和解释区组成。
 - 证据是更大的视觉区域；解释区只说明看什么以及它说明什么。
-- 每页只提供一个证据对象：使用 `media` 承载图片或视频，或者使用
-  `component` 承载 `chart` 或 `table`；两者不能同时出现。
+- 每页只提供一个证据对象：使用 `media` 承载图片或视频，或者使用 `component` 承载 `chart` 或 `table`；两者不能同时出现。
 - 图片、截图或视频必须放入稳定 Media Surface，并显示必要标题、来源或说明。
 - Media Surface 根据素材使用 `16:9`、`3:4` 或 `9:16`，竖版素材不会改变整张 Slide 的 16:9 画布。
 - 视频使用本地资源和原生 controls，打印时使用 poster 替代。
-- 图表和表格继续复用对应 Content Component 的数据契约与视觉规则，不在
-  Evidence 中建立第二套 renderer。
+- 图表和表格继续复用对应 Content Component 的数据契约与视觉规则，不在 Evidence 中建立第二套 renderer。
 - 默认完整展示证据；只有裁切不会损害含义时才使用 `cover`。
 
-实现来源：`renderEvidence()`、`renderComponent()`、`.evidence-layout` 与
-`.evidence-*`。
+实现来源：`renderEvidence()`、`renderComponent()`、`.evidence-layout` 与 `.evidence-*`。
 
 ## Summary
 
@@ -84,5 +78,4 @@
 3. 在模板中补齐 renderer、CSS、深浅主题和打印实现；
 4. 在 `quality-gates.md` 增加能够发现回归的验收项。
 
-只改变左右比例、对齐或组件组合时，优先建立已有模式的明确变体，不新增 Page
-Type。
+只改变左右比例、对齐或组件组合时，优先建立已有模式的明确变体，不新增 Page Type。
